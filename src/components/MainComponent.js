@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { actions } from "react-redux-form";
 import Menu from "./MenuComponent";
 // import { DISHES } from "../shared/dishes";
 // import { COMMENTS } from "../shared/comments";
@@ -27,6 +28,9 @@ const mapDispatchToProps = (dispatch) => ({
   addComment: (dishId, rating, author, comment) =>
     dispatch(addComment(dishId, rating, author, comment)),
   fetchDishes: () => dispatch(fetchDishes()),
+  resetFeedbackForm: () => {
+    dispatch(actions.reset("feedback"));
+  },
 });
 
 class Main extends Component {
@@ -91,7 +95,12 @@ class Main extends Component {
             component={() => <Menu dishes={this.props.dishes} />}
           />
           <Route path="/menu/:dishId" component={DishWithId} />
-          <Route path="/contactus" component={Contact} />
+          <Route
+            path="/contactus"
+            component={() => (
+              <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+            )}
+          />
           <Route
             path="/aboutus"
             component={() => <About leaders={this.props.leaders} />}

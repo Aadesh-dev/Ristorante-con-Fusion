@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 function RenderLeader({ leader }) {
   return (
-    <Media tag="li">
+    <Media tag="li" key={leader.id}>
       <Media left middle>
         <Media object src={leader.image} alt={leader.name} />
       </Media>

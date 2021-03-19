@@ -19,6 +19,8 @@ import {
   fetchDishes,
   fetchComemnts,
   fetchPromos,
+  fetchLeaders,
+  postFeedback,
 } from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -39,6 +41,8 @@ const mapDispatchToProps = (dispatch) => ({
   resetFeedbackForm: () => {
     dispatch(actions.reset("feedback"));
   },
+  fetchLeaders: () => dispatch(fetchLeaders()),
+  postFeedback: (feedback) => dispatch(postFeedback(feedback)),
 });
 
 class Main extends Component {
@@ -50,6 +54,7 @@ class Main extends Component {
     this.props.fetchDishes();
     this.props.fetchComemnts();
     this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
 
   render() {
@@ -66,7 +71,11 @@ class Main extends Component {
           }
           promosLoading={this.props.promotions.isLoading}
           promosErrMess={this.props.promotions.errMess}
-          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+          leader={
+            this.props.leaders.leaders.filter((leader) => leader.featured)[0]
+          }
+          leadersLoading={this.props.leaders.isLoading}
+          leadersErrMess={this.props.leaders.errMess}
         />
       );
     };
@@ -84,7 +93,7 @@ class Main extends Component {
           comments={this.props.comments.comments.filter(
             (comment) => comment.dishId === parseInt(match.params.dishId, 10)
           )}
-          commentsErrMess={this.props.promotions.errMess}
+          commentsErrMess={this.props.comments.errMess}
           postComment={this.props.postComment}
         />
       );
@@ -122,7 +131,10 @@ class Main extends Component {
                 exact
                 path="/contactus"
                 component={() => (
-                  <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+                  <Contact
+                    resetFeedbackForm={this.props.resetFeedbackForm}
+                    postFeedback={this.props.postFeedback}
+                  />
                 )}
               />
               <Route

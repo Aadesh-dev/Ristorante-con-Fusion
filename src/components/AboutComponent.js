@@ -1,4 +1,6 @@
 import React from "react";
+import { baseUrl } from "../shared/baseUrl";
+import { Loading } from "./LoadingComponent";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,12 +10,13 @@ import {
   Media,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
 
 function RenderLeader({ leader }) {
   return (
     <Media tag="li" key={leader.id}>
       <Media left middle>
-        <Media object src={leader.image} alt={leader.name} />
+        <Media object src={baseUrl + leader.image} alt={leader.name} />
       </Media>
       <Media body className="ml-5">
         <Media heading>{leader.name}</Media>
@@ -25,9 +28,36 @@ function RenderLeader({ leader }) {
 }
 
 function About(props) {
-  const leaders = props.leaders.map((leader) => {
-    return <RenderLeader leader={leader} />;
-  });
+  var leaders = "";
+  if (props.leaders.isLoading) {
+    leaders = (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  } else if (props.leaders.errMess) {
+    leaders = (
+      <div className="container">
+        <div className="row">
+          <h4>{props.leaders.errMess}</h4>
+        </div>
+      </div>
+    );
+  } else {
+    leaders = (
+      <Stagger in>
+        {props.leaders.leaders.map((leader) => {
+          return (
+            <Fade>
+              <RenderLeader leader={leader} />
+            </Fade>
+          );
+        })}
+      </Stagger>
+    );
+  }
 
   return (
     <div className="container">
